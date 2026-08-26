@@ -213,13 +213,36 @@ const step = 360 / shots.length;
 		cursor: grab;
 		touch-action: pan-y;
 		user-select: none;
-		/* The mask clips to this element's border box (mask-clip has no
-		   reliable "no-clip"), so the box has to stay wider than the
-		   widest projected card or the front card gets a hard vertical cut
-		   down its right edge. That is what the generous negative
-		   margin-right below is buying: room, not just position. */
-		-webkit-mask-image: linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent);
-		mask-image: linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent);
+		/* Vertical edge fade, with a fully transparent dead zone at each end
+		   (0-4% and 96-100%) rather than ramping all the way to the border.
+		   A card exiting the ring has its own bottom edge land within a few
+		   px of the box boundary, so a gradient that only reached zero AT
+		   the boundary left that edge ~12% opaque and it showed as a hard
+		   horizontal line across the card. Reaching zero at 96% means
+		   anything that close to the edge is already invisible.
+		   The opaque band is 20-80%, so the front card still reads at full
+		   strength.
+		   The mask also clips to this element's border box (mask-clip has
+		   no reliable "no-clip"), which is why the negative margin-right
+		   below is sized to keep the widest projected card inside it. */
+		-webkit-mask-image: linear-gradient(
+			180deg,
+			transparent 0%,
+			transparent 4%,
+			#000 20%,
+			#000 80%,
+			transparent 96%,
+			transparent 100%
+		);
+		mask-image: linear-gradient(
+			180deg,
+			transparent 0%,
+			transparent 4%,
+			#000 20%,
+			#000 80%,
+			transparent 96%,
+			transparent 100%
+		);
 	}
 
 	.hero-shots.is-dragging {
@@ -301,10 +324,16 @@ const step = 360 / shots.length;
 			   intrinsic width left to fall back on, so the whole ring
 			   collapsed to 0px wide. Explicit width plus justify-self
 			   centres it without losing the containing block. */
-			width: 100%;
-			max-width: 460px;
-			margin-right: 0;
-			justify-self: center;
+			/* Full bleed: cancel .page's horizontal padding so the ring
+			   runs to both screen edges. Negative margins matched to that
+			   padding rather than width:100vw, because 100vw counts the
+			   scrollbar and would push the page sideways. Below 900px the
+			   viewport is always narrower than .section's 1080px cap, so
+			   the section fills the padded area exactly and these margins
+			   land flush with the screen. */
+			width: auto;
+			max-width: none;
+			margin-inline: calc(-1 * clamp(20px, 7vw, 120px));
 			/* Everything here is derived from card width, which keeps the
 			   whole ring proportional at any phone size instead of drifting
 			   as viewport-based clamps pull the parts in different
@@ -315,7 +344,7 @@ const step = 360 / shots.length;
 			   front card's outer edge, so cards sit side by side.
 			   An earlier 1.15x radius against a viewport perspective was
 			   what stacked them into an unreadable pile. */
-			--card-w: clamp(140px, 34vw, 200px);
+			--card-w: clamp(150px, 40vw, 240px);
 			--radius: calc(var(--card-w) * 1.6);
 			perspective: calc(var(--card-w) * 5);
 			/* Clears the projected card height (0.945 * card-w) with even
@@ -329,8 +358,28 @@ const step = 360 / shots.length;
 			   Desktop deliberately stays overflow:visible, where cards must
 			   be free to overhang the box. */
 			overflow: hidden;
-			-webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-			mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+			/* Horizontal fade, so cards dissolve at the screen edge instead
+			   of being sliced by the overflow clip below. Shorter ramp than
+			   desktop because full bleed means the edge IS the screen edge,
+			   and a long fade there just wastes width. */
+			-webkit-mask-image: linear-gradient(
+				90deg,
+				transparent 0%,
+				transparent 3%,
+				#000 15%,
+				#000 85%,
+				transparent 97%,
+				transparent 100%
+			);
+			mask-image: linear-gradient(
+				90deg,
+				transparent 0%,
+				transparent 3%,
+				#000 15%,
+				#000 85%,
+				transparent 97%,
+				transparent 100%
+			);
 		}
 
 		/* No tilt on mobile. A rotateX here reads as the ring being cropped
