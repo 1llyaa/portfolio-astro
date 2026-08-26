@@ -1,0 +1,112 @@
+---
+---
+
+<section id="contact" class="section contact rule-top" data-reveal>
+	<div class="grid">
+		<div>
+			<h2>Contact</h2>
+		</div>
+		<div class="copy">
+			<p class="lede">Email is the fastest way to reach me.</p>
+			<div class="links">
+				<a href="mailto:illya@miloserdov.cz">illya@miloserdov.cz</a>
+				<a href="https://github.com/1llyaa" target="_blank" rel="noopener">github.com/1llyaa</a>
+				<a href="https://www.linkedin.com/in/illya-miloserdov-b8050a253/" target="_blank" rel="noopener"
+					>linkedin.com/in/illya-miloserdov</a
+				>
+				<button id="save-vcard">save contact (.vcf)</button>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.contact {
+		padding: clamp(36px, 5vw, 64px) 0 clamp(48px, 7vw, 96px);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: clamp(24px, 4vw, 64px);
+	}
+
+	h2 {
+		margin: 0;
+		font: 500 12px/1 "IBM Plex Mono", monospace;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--ink3);
+	}
+
+	.copy {
+		grid-column: span 2;
+		min-width: 0;
+		max-width: 60ch;
+	}
+
+	.lede {
+		margin: 0 0 26px;
+		font-family: "Young Serif", Georgia, serif;
+		font-weight: 400;
+		font-size: clamp(21px, 3vw, 32px);
+		line-height: 1.25;
+		letter-spacing: -0.01em;
+		text-wrap: pretty;
+	}
+
+	.links {
+		display: grid;
+		gap: 14px;
+		font: 400 15px/1.5 "IBM Plex Mono", monospace;
+	}
+
+	#save-vcard {
+		justify-self: start;
+		padding: 0;
+		border: 0;
+		border-bottom: 1px solid var(--rule);
+		background: transparent;
+		color: var(--ink2);
+		font: 400 15px/1.5 "IBM Plex Mono", monospace;
+		cursor: pointer;
+		transition:
+			color 0.3s ease,
+			border-color 0.3s ease,
+			transform 0.12s ease;
+	}
+
+	#save-vcard:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+
+	#save-vcard:active {
+		transform: translateY(1px);
+	}
+</style>
+
+<script>
+	const button = document.getElementById("save-vcard")!;
+
+	button.addEventListener("click", () => {
+		const vcf = [
+			"BEGIN:VCARD",
+			"VERSION:3.0",
+			"N:Miloserdov;Illya",
+			"FN:Illya Miloserdov",
+			"TITLE:Fullstack & DevOps developer",
+			"EMAIL:illya@miloserdov.cz",
+			"TEL:+420773241363",
+			"URL:https://github.com/1llyaa",
+			"ADR:;;;České Budějovice;;;Czechia",
+			"END:VCARD",
+		].join("\n");
+
+		const anchor = document.createElement("a");
+		anchor.href = URL.createObjectURL(new Blob([vcf], { type: "text/vcard" }));
+		anchor.download = "illya-miloserdov.vcf";
+		anchor.click();
+		URL.revokeObjectURL(anchor.href);
+	});
+</script>

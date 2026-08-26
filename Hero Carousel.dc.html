@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #e8e4dd; }
+  a { color: #1b1917; text-decoration: none; }
+  a:hover { color: #b8552e; }
+  @keyframes om-spin { from { transform: rotateY(0deg); } to { transform: rotateY(-360deg); } }
+  @keyframes om-spin-x { from { transform: rotateX(0deg); } to { transform: rotateX(-360deg); } }
+  @keyframes om-bob { 0% { transform: translateY(-10px); } 100% { transform: translateY(10px); } }
+  @keyframes om-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes om-rise { from { opacity: 0; transform: translate3d(0,18px,0); filter: blur(5px); } to { opacity: 1; transform: none; filter: blur(0); } }
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; overflow: hidden; background: radial-gradient(120% 100% at 50% 0%, #f4f1eb 0%, #e5e0d8 45%, #cfc8bd 100%); font-family: Geist, system-ui, sans-serif; color: #1b1917; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; padding: 48px 24px;">
+
+  <div style="position: absolute; inset: 0; opacity: .45; background-image: radial-gradient(#b7afa2 0.7px, transparent 0.7px); background-size: 4px 4px; mix-blend-mode: multiply;"></div>
+
+  <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; animation: om-rise .9s cubic-bezier(.2,.8,.2,1) both;">
+    <span style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #8b8377;">Placeholder gallery</span>
+    <h1 style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: .95; letter-spacing: -.025em;">
+      A carousel that <em style="font-style: italic; color: #b8552e;">turns</em>
+    </h1>
+  </div>
+
+  <div style="position: relative; width: 100%; max-width: 1180px; height: min(60vh, 520px); perspective: 1700px; perspective-origin: 50% 50%; animation: om-fade 1.2s ease .2s both; mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent); -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);">
+    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transform: rotateY(-14deg);">
+      <div style="position: relative; width: 300px; height: 380px; transform-style: preserve-3d; animation: {{ spinKeyframes }} {{ spinDuration }} linear infinite; will-change: transform;">
+        <sc-for list="{{ cards }}" as="card" hint-placeholder-count="9">
+          <div style="position: absolute; inset: 0; transform-style: preserve-3d; backface-visibility: hidden; transform: {{ card.transform }};">
+            <div style="position: relative; width: 100%; height: 100%; border-radius: 18px; overflow: hidden; background: {{ card.bg }}; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 40px 70px -40px rgba(35,30,25,.75), inset 0 1px 0 rgba(255,255,255,.16); animation: om-bob {{ card.bobDuration }} ease-in-out infinite alternate;">
+              <div style="position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.3) 0.6px, transparent 0.6px); background-size: 3px 3px; opacity: .45;"></div>
+              <div style="position: absolute; inset: 0; background: linear-gradient(200deg, rgba(255,255,255,.22), rgba(255,255,255,0) 42%);"></div>
+              <div style="position: absolute; left: 20px; top: 18px; font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: .14em; color: rgba(255,255,255,.55);">{{ card.num }}</div>
+              <div style="position: absolute; left: 20px; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 12px;">
+                <span style="font-family: 'Instrument Serif', serif; font-size: 27px; line-height: 1.05; color: #f8f6f3;">{{ card.title }}</span>
+                <div style="display: flex; gap: 6px;">
+                  <span style="height: 4px; width: 48px; border-radius: 999px; background: {{ card.accent }};"></span>
+                  <span style="height: 4px; width: 20px; border-radius: 999px; background: rgba(255,255,255,.24);"></span>
+                  <span style="height: 4px; width: 10px; border-radius: 999px; background: rgba(255,255,255,.14);"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="position: absolute; left: 50%; top: 50%; width: 70%; height: 130px; transform: translate(-50%,-50%); background: radial-gradient(50% 50% at 50% 50%, rgba(60,52,44,.18), rgba(60,52,44,0) 72%); filter: blur(18px); z-index: -1;"></div>
+  </div>
+
+  <div style="position: relative; display: flex; align-items: center; gap: 10px; padding: 9px 16px; border: 1px solid rgba(27,25,23,.12); border-radius: 999px; background: rgba(255,255,255,.62); backdrop-filter: blur(8px); font-size: 13px; color: #6c655c; animation: om-rise .9s cubic-bezier(.2,.8,.2,1) .3s both;">
+    <span style="width: 6px; height: 6px; border-radius: 999px; background: #b8552e;"></span>
+    Loops forever · adjust speed, radius and tilt in Tweaks
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800},&quot;axis&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;vertical&quot;,&quot;horizontal&quot;],&quot;default&quot;:&quot;vertical&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;spinSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:34,&quot;min&quot;:8,&quot;max&quot;:80,&quot;step&quot;:2,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;radius&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:780,&quot;min&quot;:420,&quot;max&quot;:1200,&quot;step&quot;:20,&quot;unit&quot;:&quot;px&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
+const CARDS = [
+  { title: "Editorial scale", bg: "linear-gradient(155deg,#2b2723,#4c443b)", accent: "#e9b872" },
+  { title: "Warm neutrals", bg: "linear-gradient(155deg,#3a2a22,#6d4231)", accent: "#f0a06a" },
+  { title: "Spring presets", bg: "linear-gradient(155deg,#232a2b,#3b4d4b)", accent: "#7fd1c1" },
+  { title: "Asymmetric grid", bg: "linear-gradient(155deg,#26232b,#443a50)", accent: "#b7a3ee" },
+  { title: "Soft elevation", bg: "linear-gradient(155deg,#1f2429,#3a474f)", accent: "#8fbede" },
+  { title: "Micro states", bg: "linear-gradient(155deg,#2b2521,#524133)", accent: "#e5c79a" },
+  { title: "Quiet contrast", bg: "linear-gradient(155deg,#221f1e,#413c39)", accent: "#d9d2c8" },
+  { title: "Fluid type", bg: "linear-gradient(155deg,#2a2620,#584a34)", accent: "#dcc07f" },
+  { title: "Zero templates", bg: "linear-gradient(155deg,#1e2220,#39433d)", accent: "#a9cdb4" },
+  { title: "Layered depth", bg: "linear-gradient(155deg,#241f26,#4a3a4c)", accent: "#e0a8cf" },
+  { title: "Grid variance", bg: "linear-gradient(155deg,#20242a,#364454)", accent: "#9fb6e0" },
+  { title: "Slow motion", bg: "linear-gradient(155deg,#292420,#5a4634)", accent: "#efbf8a" }
+];
+
+class Component extends DCLogic {
+  renderVals() {
+    const src = this.props.cards ?? CARDS;
+    const radius = this.props.radius ?? 780;
+    const vertical = (this.props.axis ?? "vertical") === "vertical";
+    const step = 360 / src.length;
+    return {
+      spinDuration: (this.props.spinSeconds ?? 34) + "s",
+      spinKeyframes: vertical ? "om-spin-x" : "om-spin",
+      cards: src.map((c, i) => ({
+        ...c,
+        num: String(i + 1).padStart(2, "0"),
+        bobDuration: (3.2 + (i % 4) * 0.6).toFixed(2) + "s",
+        transform: vertical
+          ? `rotateX(${(i * step).toFixed(3)}deg) translateZ(${radius}px)`
+          : `rotateY(${(i * step).toFixed(3)}deg) translateZ(${radius}px)`
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

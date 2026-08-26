@@ -1,0 +1,128 @@
+:root {
+	--paper: #faf7f2;
+	--ink: #1b1917;
+	--ink2: #5d574e;
+	--ink3: #8b8377;
+	--rule: rgba(27, 25, 23, 0.14);
+	--rule2: rgba(27, 25, 23, 0.07);
+	--accent: #b04a2c;
+	--wash: #f3eee5;
+}
+
+:root[data-theme="dark"] {
+	--paper: #191715;
+	--ink: #f5f1e9;
+	--ink2: #a8a096;
+	--ink3: #7d7669;
+	--rule: rgba(245, 241, 233, 0.16);
+	--rule2: rgba(245, 241, 233, 0.08);
+	--accent: #d9744f;
+	--wash: #221f1c;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	background: var(--paper);
+	color: var(--ink);
+	font-family: "IBM Plex Sans", system-ui, sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+
+a {
+	color: var(--accent);
+	text-decoration: none;
+}
+
+a:hover {
+	color: var(--ink);
+}
+
+::selection {
+	background: var(--accent);
+	color: var(--paper);
+}
+
+.page {
+	padding: 0 clamp(20px, 7vw, 120px);
+	min-height: 100vh;
+}
+
+.section {
+	max-width: 1080px;
+	margin: 0 auto;
+}
+
+.rule-top {
+	border-top: 1px solid var(--rule);
+}
+
+/* ---------------------------------------------------------------
+   Motion layer
+   One-shot entrances only, plus the hero float. Every animated
+   selector is repeated in the reduced-motion block at the bottom.
+   --------------------------------------------------------------- */
+
+@keyframes rise {
+	from {
+		opacity: 0;
+		transform: translateY(22px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* One-shot entrance. --i sets stagger position. */
+.rise {
+	--i: 0;
+	animation: rise 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.02) both;
+	animation-delay: calc(var(--i) * 80ms);
+}
+
+/* Scroll reveal. The hidden state is scoped under .js-reveal, which is
+   only stamped on <html> when JS is running and motion is allowed, so a
+   failed script or a no-JS reader never gets a blank page. */
+.js-reveal [data-reveal] {
+	opacity: 0;
+	transform: translateY(22px);
+	transition:
+		opacity 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.02),
+		transform 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.02);
+}
+
+.js-reveal [data-reveal].is-in {
+	opacity: 1;
+	transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	.rise {
+		animation: none;
+	}
+
+	.js-reveal [data-reveal] {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+
+
+	*,
+	*::before,
+	*::after {
+		transition-duration: 0.01ms !important;
+	}
+}
