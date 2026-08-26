@@ -1,0 +1,116 @@
+---
+---
+
+<section id="card" class="section print-card rule-top" data-reveal>
+	<div class="heading">
+		<h2>Print card</h2>
+		<span class="spacer"></span>
+		<span class="dims">85 × 55 mm</span>
+	</div>
+	<div class="cards">
+		<div class="card card-light">
+			<span class="eyebrow">Fullstack · DevOps</span>
+			<div class="name">Illya<br />Miloserdov</div>
+			<span class="bar"></span>
+		</div>
+		<div class="card card-dark">
+			<span class="eyebrow">Contact</span>
+			<span>illya@miloserdov.cz</span>
+			<span>+420 773 241 363</span>
+			<span class="handle">github.com/1llyaa</span>
+		</div>
+	</div>
+</section>
+
+<style>
+	.print-card {
+		padding: clamp(36px, 5vw, 64px) 0;
+	}
+
+	.heading {
+		display: flex;
+		align-items: baseline;
+		gap: 18px;
+		flex-wrap: wrap;
+		margin-bottom: clamp(20px, 3vw, 32px);
+	}
+
+	.heading h2 {
+		margin: 0;
+		font: 500 12px/1 "IBM Plex Mono", monospace;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--ink3);
+	}
+
+	.spacer {
+		flex: 1;
+		min-width: 10px;
+	}
+
+	.dims {
+		font: 400 12px/1 "IBM Plex Mono", monospace;
+		color: var(--ink3);
+	}
+
+	.cards {
+		display: flex;
+		flex-wrap: wrap;
+		gap: clamp(16px, 3vw, 28px);
+	}
+
+	.card {
+		width: min(100%, 400px);
+		aspect-ratio: 85 / 55;
+		padding: clamp(18px, 3.4vw, 26px);
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	.card-light {
+		background: #faf7f2;
+		color: #1b1917;
+		border: 1px solid rgba(27, 25, 23, 0.14);
+	}
+
+	.card-light .eyebrow {
+		font: 500 8.5px/1 "IBM Plex Mono", monospace;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+		color: #8b8377;
+	}
+
+	.card-light .name {
+		font-family: "Young Serif", Georgia, serif;
+		font-size: clamp(24px, 4.6vw, 36px);
+		line-height: 1.02;
+		letter-spacing: -0.02em;
+	}
+
+	.card-light .bar {
+		width: 34px;
+		height: 2px;
+		background: #b04a2c;
+	}
+
+	.card-dark {
+		background: #1b1917;
+		color: #faf7f2;
+		border: 1px solid rgba(250, 247, 242, 0.12);
+		gap: 5px;
+		font: 400 clamp(9.5px, 1.5vw, 12px) / 1.5 "IBM Plex Mono", monospace;
+	}
+
+	.card-dark .eyebrow {
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: #8b8377;
+		margin-bottom: 6px;
+		font: inherit;
+	}
+
+	.card-dark .handle {
+		color: #d9744f;
+	}
+</style>

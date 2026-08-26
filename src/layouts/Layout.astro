@@ -1,23 +1,74 @@
+---
+import "../styles/global.css";
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = "Illya Miloserdov — Fullstack & DevOps developer",
+	description = "Fullstack and DevOps developer at Bosch in České Budějovice. Case studies in Shopify, Supabase, and AI-directed builds.",
+} = Astro.props;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{title}</title>
+		<meta name="description" content={description} />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Young+Serif&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+			rel="stylesheet"
+		/>
+
+		<script is:inline>
+			(function () {
+				try {
+					var saved = localStorage.getItem("im-theme");
+					var theme = saved === "dark" || saved === "light" ? saved : "light";
+					document.documentElement.setAttribute("data-theme", theme);
+				} catch (e) {}
+
+				// Stamp the reveal gate before first paint, so [data-reveal]
+				// elements are never hidden unless JS is actually running to
+				// un-hide them. Reduced-motion users skip it entirely.
+				try {
+					if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+						document.documentElement.classList.add("js-reveal");
+					}
+				} catch (e) {}
+			})();
+		</script>
 	</head>
 	<body>
 		<slot />
+
+		<script>
+			const targets = document.querySelectorAll<HTMLElement>("[data-reveal]");
+
+			if (document.documentElement.classList.contains("js-reveal") && targets.length) {
+				const io = new IntersectionObserver(
+					(entries) => {
+						for (const entry of entries) {
+							if (!entry.isIntersecting) continue;
+							entry.target.classList.add("is-in");
+							io.unobserve(entry.target);
+						}
+					},
+					{ rootMargin: "0px 0px -12% 0px", threshold: 0.1 },
+				);
+
+				targets.forEach((el) => io.observe(el));
+			}
+		</script>
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

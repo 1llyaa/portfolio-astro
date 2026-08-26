@@ -1,0 +1,518 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+// TEMPORARY PLACEHOLDERS. src/assets/hero-placeholder/ holds nine generated
+// colour cards (each shows N bars for its index) purely so the rotation is
+// easy to read while the motion is being tuned. Replace that folder with the
+// real screenshots, or point this glob somewhere else, before shipping.
+const files = import.meta.glob<{ default: ImageMetadata }>(
+	"../assets/hero-placeholder/*.png",
+	{ eager: true },
+);
+const shots = Object.keys(files)
+	.sort()
+	.map((k) => ({ src: files[k].default }));
+
+// Vertical ring (rolodex / ferris wheel): each card sits at
+// rotateX(i * step) translateZ(--radius) and the wheel spins on X.
+const step = 360 / shots.length;
+---
+
+<section class="section hero">
+	<div class="hero-copy">
+		<div class="availability rise" style="--i: 0">
+			<span class="dot"></span>Open to fullstack &amp; DevOps work
+		</div>
+		<h1 class="rise" style="--i: 1">Illya Miloserdov</h1>
+		<p class="lede rise" style="--i: 2">
+			Fullstack and DevOps developer at Bosch in České Budějovice, building an Angular and C# service
+			that manages parts across production lines.
+		</p>
+		<p class="sub rise" style="--i: 3">
+			Side projects ship the same way: I direct AI coding agents with precise, domain-informed
+			instructions instead of writing every line by hand. Real clients, real constraints, production
+			stacks — Supabase, Shopify, Angular.
+		</p>
+		<div class="actions rise" style="--i: 4">
+			<a class="cta" href="mailto:illya@miloserdov.cz">Get in touch</a>
+			<button id="copy-email">copy email</button>
+		</div>
+	</div>
+
+	{/* Decorative: the same shot repeated, so the alt text would be nine
+	    identical strings. Hidden from assistive tech rather than repeated.
+
+	    Three nested layers, which is what makes the 3D behave:
+	      .hero-shots  owns perspective and the top/bottom mask fade
+	      .yaw         static rotateY, gives the three-quarter view
+	      .wheel       the rotateX spin, driven by the script below
+	    Cards then place themselves with rotateX(--angle) translateZ(--radius)
+	    inside the wheel's own frame. Keeping the yaw and the spin on
+	    SEPARATE elements is the part that matters: composing both on one
+	    element makes each card's own rotate turn about an already-tilted
+	    axis, which shears them. */}
+	<div class="hero-shots rise" style="--i: 2" aria-hidden="true">
+		<div class="yaw">
+			<div class="wheel">
+				{
+					shots.map((s, i) => (
+						<figure style={`--angle: ${(step * i).toFixed(3)}deg`}>
+							<Image
+								src={s.src}
+								alt=""
+								widths={[250, 500, 750]}
+								sizes="(max-width: 900px) 40vw, 250px"
+								loading="eager"
+								draggable="false"
+							/>
+						</figure>
+					))
+				}
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.hero {
+		display: grid;
+		grid-template-columns: 1fr 1.1fr;
+		gap: clamp(28px, 3vw, 48px);
+		align-items: center;
+		padding: clamp(36px, 5vw, 88px) 0 clamp(40px, 7vw, 96px);
+	}
+
+	.hero-copy {
+		min-width: 0;
+	}
+
+	.availability {
+		display: inline-flex;
+		align-items: center;
+		gap: 9px;
+		font: 500 11.5px/1 "IBM Plex Mono", monospace;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--ink2);
+		margin-bottom: clamp(24px, 3vw, 36px);
+	}
+
+	.dot {
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: var(--accent);
+	}
+
+	h1 {
+		margin: 0 0 clamp(22px, 3vw, 32px);
+		font-family: "Young Serif", Georgia, serif;
+		font-weight: 400;
+		font-size: clamp(38px, 5.2vw, 66px);
+		line-height: 1.02;
+		letter-spacing: -0.02em;
+		max-width: 14ch;
+		text-wrap: balance;
+	}
+
+	.lede {
+		margin: 0 0 20px;
+		max-width: 46ch;
+		font: 400 clamp(16px, 1.5vw, 19px) / 1.55 "IBM Plex Sans", sans-serif;
+		color: var(--ink);
+		text-wrap: pretty;
+	}
+
+	.sub {
+		margin: 0 0 clamp(26px, 3vw, 36px);
+		max-width: 46ch;
+		font: 400 clamp(14.5px, 1.2vw, 16px) / 1.65 "IBM Plex Sans", sans-serif;
+		color: var(--ink2);
+		text-wrap: pretty;
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px 26px;
+		align-items: center;
+	}
+
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		height: 46px;
+		padding: 0 22px;
+		background: var(--accent);
+		color: var(--paper);
+		font: 500 14px/1 "IBM Plex Sans", sans-serif;
+		transition:
+			background-color 0.3s ease,
+			color 0.3s ease,
+			transform 0.12s ease;
+	}
+
+	.cta:hover {
+		background: var(--ink);
+		color: var(--paper);
+	}
+
+	.cta:active {
+		transform: translateY(1px);
+	}
+
+	#copy-email {
+		height: 46px;
+		padding: 0 4px;
+		border: 0;
+		background: transparent;
+		color: var(--ink2);
+		font: 500 13px/1 "IBM Plex Mono", monospace;
+		cursor: pointer;
+		border-bottom: 1px solid var(--rule);
+		transition:
+			color 0.3s ease,
+			border-color 0.3s ease,
+			transform 0.12s ease;
+	}
+
+	#copy-email:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+
+	#copy-email:active {
+		transform: translateY(1px);
+	}
+
+	/* Vertical ring carousel (rolodex), per the design reference: cards at
+	   rotateX(--angle) translateZ(--radius) around a wheel that spins on X.
+	   Real 3D this time, and it works because tilt and spin live on
+	   separate elements (see the markup comment).
+	   The radius is deliberately larger than the visible box, so what you
+	   see is a slice of a big wheel rather than a whole small one, with
+	   the mask fading cards out top and bottom as they arc away. That mask
+	   is load-bearing, not decoration: without it cards hard-clip at the
+	   container edge.
+	   Flat hairline frames, no glass or drop shadows, unlike the reference
+	   board: this site's materiality stays. */
+	.hero-shots {
+		/* Radius tracks card width on purpose. With 9 cards the arc between
+		   neighbours is 2*pi*R/9 = 0.70*R, and a 1400x900 card is 0.64*R
+		   tall at R = card width, so neighbours sit edge to edge and the
+		   ring reads as one continuous band instead of scattered cards.
+		   Change the card count and this relationship needs redoing. */
+		--card-w: clamp(200px, 24vw, 340px);
+		--radius: var(--card-w);
+		position: relative;
+		height: clamp(300px, 36vw, 500px);
+		margin-right: clamp(-100px, -6vw, -24px);
+		perspective: clamp(750px, 88vw, 1250px);
+		perspective-origin: 50% 50%;
+		cursor: grab;
+		touch-action: pan-y;
+		user-select: none;
+		/* Vertical edge fade, with a fully transparent dead zone at each end
+		   (0-4% and 96-100%) rather than ramping all the way to the border.
+		   A card exiting the ring has its own bottom edge land within a few
+		   px of the box boundary, so a gradient that only reached zero AT
+		   the boundary left that edge ~12% opaque and it showed as a hard
+		   horizontal line across the card. Reaching zero at 96% means
+		   anything that close to the edge is already invisible.
+		   The opaque band is 20-80%, so the front card still reads at full
+		   strength.
+		   The mask also clips to this element's border box (mask-clip has
+		   no reliable "no-clip"), which is why the negative margin-right
+		   below is sized to keep the widest projected card inside it. */
+		-webkit-mask-image: linear-gradient(
+			180deg,
+			transparent 0%,
+			transparent 4%,
+			#000 20%,
+			#000 80%,
+			transparent 96%,
+			transparent 100%
+		);
+		mask-image: linear-gradient(
+			180deg,
+			transparent 0%,
+			transparent 4%,
+			#000 20%,
+			#000 80%,
+			transparent 96%,
+			transparent 100%
+		);
+	}
+
+	.hero-shots.is-dragging {
+		cursor: grabbing;
+	}
+
+	.hero-shots .yaw {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transform-style: preserve-3d;
+		/* Positive yaw swings the near face of the ring toward the right,
+		   away from the copy column. A negative yaw put the front card
+		   ~110px LEFT of centre, which crowded the text. Kept modest: every
+		   extra degree pushes the card further right and eats the clearance
+		   the mask needs (see .hero-shots), and the negative margin that
+		   buys that clearance cannot grow without overflowing the viewport
+		   at mid widths. 8deg is the balance point. */
+		transform: rotateY(8deg);
+	}
+
+	.hero-shots .wheel {
+		position: relative;
+		width: var(--card-w);
+		aspect-ratio: 1400 / 900;
+		transform-style: preserve-3d;
+		transform: rotateX(0deg);
+		will-change: transform;
+	}
+
+	.hero-shots figure {
+		position: absolute;
+		inset: 0;
+		margin: 0;
+		background: var(--paper);
+		border: 1px solid var(--rule);
+		/* Cards on the far side of the ring face away and are culled,
+		   so only the near arc draws. */
+		backface-visibility: hidden;
+		/* All pointer input belongs to .hero-shots. Without this the img
+		   under the cursor starts the browser's native image drag and you
+		   end up dragging a ghost of the screenshot instead of spinning
+		   the ring. */
+		pointer-events: none;
+		transform: rotateX(var(--angle)) translateZ(var(--radius));
+	}
+
+	.hero-shots :global(img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		-webkit-user-drag: none;
+		user-select: none;
+	}
+
+	@media (max-width: 900px) {
+		.hero {
+			grid-template-columns: 1fr;
+			align-items: start;
+		}
+
+		/* Mobile turns the ring on its side: cards orbit left-to-right
+		   instead of top-to-bottom. Two reasons. A vertical ring wants
+		   vertical room the phone viewport does not have, and horizontal
+		   drag is the only drag that works on touch: touch-action pan-y
+		   hands vertical gestures to the page for scrolling and leaves
+		   horizontal ones for us, so mobile gets real drag rather than
+		   auto-spin only.
+		   The axis swap is symmetric. Yaw goes rotateY -> rotateX, the
+		   spin goes rotateX -> rotateY (in the script), each card goes
+		   rotateX -> rotateY, and the mask fade goes vertical ->
+		   horizontal. */
+		.hero-shots {
+			/* NOT margin-inline:auto. That stops this grid item stretching,
+			   and since every child is absolutely positioned there is no
+			   intrinsic width left to fall back on, so the whole ring
+			   collapsed to 0px wide. Explicit width plus justify-self
+			   centres it without losing the containing block. */
+			/* Full bleed: cancel .page's horizontal padding so the ring
+			   runs to both screen edges. Negative margins matched to that
+			   padding rather than width:100vw, because 100vw counts the
+			   scrollbar and would push the page sideways. Below 900px the
+			   viewport is always narrower than .section's 1080px cap, so
+			   the section fills the padded area exactly and these margins
+			   land flush with the screen. */
+			width: auto;
+			max-width: none;
+			margin-inline: calc(-1 * clamp(20px, 7vw, 120px));
+			/* Everything here is derived from card width, which keeps the
+			   whole ring proportional at any phone size instead of drifting
+			   as viewport-based clamps pull the parts in different
+			   directions.
+			   radius 1.6x and perspective 5x together fix the front card's
+			   magnification at 5/(5-1.6) = 1.47 whatever the card measures,
+			   and put the neighbour's inner edge within a few px of the
+			   front card's outer edge, so cards sit side by side.
+			   An earlier 1.15x radius against a viewport perspective was
+			   what stacked them into an unreadable pile. */
+			--card-w: clamp(150px, 40vw, 240px);
+			--radius: calc(var(--card-w) * 1.6);
+			perspective: calc(var(--card-w) * 5);
+			/* Clears the projected card height (0.945 * card-w) with even
+			   margin top and bottom, so the overflow clip below never bites. */
+			height: calc(var(--card-w) * 1.25);
+			/* A horizontal ring throws cards well outside the wrapper as
+			   they orbit, and those still count toward scrollable width
+			   even while the mask hides them, which pushed the page 86px
+			   sideways at 390px. The mask already reaches zero alpha at
+			   both edges, so clipping there costs nothing visually.
+			   Desktop deliberately stays overflow:visible, where cards must
+			   be free to overhang the box. */
+			overflow: hidden;
+			/* Horizontal fade, so cards dissolve at the screen edge instead
+			   of being sliced by the overflow clip below. Shorter ramp than
+			   desktop because full bleed means the edge IS the screen edge,
+			   and a long fade there just wastes width. */
+			-webkit-mask-image: linear-gradient(
+				90deg,
+				transparent 0%,
+				transparent 3%,
+				#000 15%,
+				#000 85%,
+				transparent 97%,
+				transparent 100%
+			);
+			mask-image: linear-gradient(
+				90deg,
+				transparent 0%,
+				transparent 3%,
+				#000 15%,
+				#000 85%,
+				transparent 97%,
+				transparent 100%
+			);
+		}
+
+		/* No tilt on mobile. A rotateX here reads as the ring being cropped
+		   at the top rather than as depth, because the viewport is too
+		   short to show the far side of the arc. Straight on is cleaner. */
+		.hero-shots .yaw {
+			transform: none;
+		}
+
+		.hero-shots figure {
+			transform: rotateY(var(--angle)) translateZ(var(--radius));
+		}
+
+		h1 {
+			max-width: 20ch;
+		}
+
+		.lede,
+		.sub {
+			max-width: 62ch;
+		}
+	}
+</style>
+
+<script>
+	const button = document.getElementById("copy-email")!;
+	let timeout: ReturnType<typeof setTimeout>;
+
+	button.addEventListener("click", async () => {
+		try {
+			await navigator.clipboard.writeText("illya@miloserdov.cz");
+			button.textContent = "copied ✓";
+		} catch {
+			button.textContent = "copy failed";
+		}
+		clearTimeout(timeout);
+		timeout = setTimeout(() => {
+			button.textContent = "copy email";
+		}, 1800);
+	});
+</script>
+
+<script>
+	// Vertical ring carousel: the wheel spins on X, drag with the pointer
+	// to turn it, momentum carries after release, idle auto-spin resumes
+	// once momentum settles.
+	//
+	// Reduced-motion users keep drag (it's user-initiated, not automatic)
+	// but get no idle spin and no momentum coast, so the wheel moves only
+	// as far as they actually drag it.
+	//
+	// The ring changes axis at the 900px breakpoint (see the CSS): vertical
+	// on desktop, horizontal on mobile. The spin and the drag axis have to
+	// follow it, so both are read from the same media query rather than
+	// hardcoded.
+	//
+	// touch-action: pan-y means the page keeps vertical gestures for
+	// scrolling and we receive horizontal ones. So the horizontal mobile
+	// ring is draggable by touch, while the vertical desktop ring is
+	// mouse-drag only. Either way the scroll is never trapped.
+	const wheel = document.querySelector<HTMLElement>(".hero-shots");
+	const ring = wheel?.querySelector<HTMLElement>(".wheel");
+
+	if (wheel && ring) {
+		const IDLE_DEG_PER_FRAME = (360 / 38000) * 16.7; // one turn per 38s
+		const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+		const horizontal = matchMedia("(max-width: 900px)");
+
+		let angle = 0;
+		let dragging = false;
+		let lastX = 0;
+		let lastY = 0;
+		let lastT = 0;
+		let momentum = 0;
+
+		const apply = () => {
+			const axis = horizontal.matches ? "rotateY" : "rotateX";
+			ring.style.transform = `${axis}(${angle.toFixed(3)}deg)`;
+		};
+
+		// Repaint on the axis swap so a resize across the breakpoint does not
+		// leave the wheel holding a transform for the wrong axis.
+		horizontal.addEventListener("change", apply);
+		apply();
+
+		const frame = () => {
+			if (!dragging) {
+				if (Math.abs(momentum) > 0.001) {
+					angle += momentum;
+					momentum *= reduced ? 0 : 0.94;
+					apply();
+				} else if (!reduced) {
+					angle -= IDLE_DEG_PER_FRAME;
+					apply();
+				}
+			}
+			requestAnimationFrame(frame);
+		};
+		requestAnimationFrame(frame);
+
+		const down = (e: PointerEvent) => {
+			dragging = true;
+			lastX = e.clientX;
+			lastY = e.clientY;
+			lastT = performance.now();
+			momentum = 0;
+			wheel.setPointerCapture(e.pointerId);
+			wheel.classList.add("is-dragging");
+		};
+
+		const move = (e: PointerEvent) => {
+			if (!dragging) return;
+			const now = performance.now();
+			// Follow whichever way the ring is currently turning.
+			const travel = horizontal.matches ? e.clientX - lastX : e.clientY - lastY;
+			const dt = Math.max(now - lastT, 1);
+			const delta = travel * 0.25;
+			angle += delta;
+			momentum = reduced ? 0 : (delta / dt) * 16.7;
+			lastX = e.clientX;
+			lastY = e.clientY;
+			lastT = now;
+			apply();
+		};
+
+		const up = () => {
+			dragging = false;
+			wheel.classList.remove("is-dragging");
+		};
+
+		wheel.addEventListener("pointerdown", down);
+		wheel.addEventListener("pointermove", move);
+		wheel.addEventListener("pointerup", up);
+		wheel.addEventListener("pointercancel", up);
+	}
+</script>
