@@ -20,7 +20,7 @@ export const caseStudies: CaseStudy[] = [
 		tags: ["Shopify", "Liquid", "Front end"],
 		description: [
 			"Cosmetics storefront on Shopify. I owned the front end: theme structure, product templates, and the merchandising rules the stock theme couldn't express.",
-			"The store has since been taken offline by the client, so there's nothing live to show — the work was in the theme layer rather than the brand.",
+			"The store has since been taken offline by the client, so there's nothing live to show. The work was in the theme layer rather than the brand.",
 		],
 	},
 	{
@@ -32,7 +32,7 @@ export const caseStudies: CaseStudy[] = [
 		image: { src: dentiyak, alt: "Dentiyak clinic site homepage" },
 		description: [
 			"Site for a dental clinic, built by giving coding agents domain-informed instructions: I specified the patient-facing flows and the content model, reviewed every diff, and kept the scope inside what a small clinic can maintain itself.",
-			"Built and reviewed, waiting on the clinic to launch. The structure is led by what patients actually call about — accepting new patients, opening hours, phone number — rather than by a services page nobody reads.",
+			"Built and reviewed, waiting on the clinic to launch. The structure is led by what patients actually call about (accepting new patients, opening hours, phone number) rather than by a services page nobody reads.",
 		],
 	},
 	{
@@ -43,7 +43,7 @@ export const caseStudies: CaseStudy[] = [
 		link: { href: "https://clutchzone.club", label: "Visit site" },
 		image: { src: clutchzone, alt: "Clutch Zone booking site" },
 		description: [
-			"Before this, the club had no way to take an online booking at all — everything happened by phone or at the counter. Now seats, tournaments and private events are reservable online, with the owner's own admin for pricing bundles, on a Supabase back end with row-level security separating staff and owner views.",
+			"Before this, the club had no way to take an online booking at all. Everything happened by phone or at the counter. Now seats, tournaments and private events are reservable online, with the owner's own admin for pricing bundles, on a Supabase back end with row-level security separating staff and owner views.",
 			"Event tracking here means funnel events, not calendar entries: how many visitors hit \"reserve\", how many start checkout, where they drop. Bundles and events share one booking record with different pricing rules, so the owner changes a price without touching reservation logic.",
 		],
 	},
