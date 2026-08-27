@@ -1,9 +1,10 @@
 FROM node:22-bookworm-slim AS build
 WORKDIR /app
 
+RUN npm install -g npm@latest
+
 COPY package.json package-lock.json ./
 RUN npm ci
-RUN ls node_modules/@img 2>&1; node -e "require('sharp')"
 
 COPY . .
 RUN npm run build
