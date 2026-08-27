@@ -3,6 +3,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 RUN npm ci
+RUN ls node_modules/@img 2>&1; node -e "require('sharp')"
 
 COPY . .
 RUN npm run build
