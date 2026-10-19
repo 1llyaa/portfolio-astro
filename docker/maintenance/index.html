@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="robots" content="noindex" />
+		<title>Illya Miloserdov - Maintenance</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Young+Serif&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+			rel="stylesheet"
+		/>
+
+		<style>
+			:root {
+				--paper: #faf7f2;
+				--ink: #1b1917;
+				--ink2: #5d574e;
+				--ink3: #8b8377;
+				--rule: rgba(27, 25, 23, 0.14);
+				--accent: #b04a2c;
+			}
+
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--paper: #191715;
+					--ink: #f5f1e9;
+					--ink2: #a8a096;
+					--ink3: #7d7669;
+					--rule: rgba(245, 241, 233, 0.16);
+					--accent: #d9744f;
+				}
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				background: var(--paper);
+				color: var(--ink);
+				font-family: "IBM Plex Sans", system-ui, sans-serif;
+				line-height: 1.55;
+			}
+
+			main {
+				width: 100%;
+				max-width: 1080px;
+				margin: 0 auto;
+				padding: clamp(24px, 6vw, 64px) clamp(16px, 5vw, 48px);
+			}
+
+			.label {
+				margin: 0 0 clamp(16px, 3vw, 24px);
+				padding-top: 12px;
+				border-top: 1px solid var(--rule);
+				font-family: "IBM Plex Mono", ui-monospace, monospace;
+				font-size: 13px;
+				letter-spacing: 0.04em;
+				text-transform: uppercase;
+				color: var(--ink3);
+			}
+
+			h1 {
+				margin: 0 0 16px;
+				font-family: "Young Serif", Georgia, serif;
+				font-weight: 400;
+				font-size: clamp(32px, 6vw, 56px);
+				line-height: 1.1;
+			}
+
+			p {
+				margin: 0;
+				max-width: 40ch;
+				color: var(--ink2);
+				font-size: clamp(16px, 2vw, 18px);
+			}
+
+			a {
+				color: var(--accent);
+				text-underline-offset: 3px;
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<p class="label">Illya Miloserdov</p>
+			<h1>The site is down for maintenance.</h1>
+			<p>
+				It will be back shortly. For anything that can't wait, write to
+				<a href="mailto:illya@miloserdov.cz">illya@miloserdov.cz</a>.
+			</p>
+		</main>
+	</body>
+</html>
