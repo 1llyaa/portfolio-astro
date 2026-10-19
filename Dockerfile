@@ -49,4 +49,12 @@ RUN npm run build
 
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
+
+# MAINTENANCE=true at runtime serves a 503 maintenance page on every path.
+# site.conf keeps the stock config so the entrypoint script can restore it.
+RUN cp /etc/nginx/conf.d/default.conf /etc/nginx/site.conf
+COPY docker/maintenance/ /usr/share/nginx/maintenance/
+COPY docker/maintenance.conf /etc/nginx/maintenance.conf
+COPY docker/05-maintenance.sh /docker-entrypoint.d/05-maintenance.sh
+RUN chmod +x /docker-entrypoint.d/05-maintenance.sh
 EXPOSE 80
